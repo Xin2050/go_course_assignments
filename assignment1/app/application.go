@@ -16,7 +16,7 @@ func StartApplication() {
 	router.Use(middleware.GinLoggerMiddleware())
 	logger.Info("application is trying to run on port 3000.")
 	router.SetTrustedProxies([]string{"localhost"})
-	//router.Handle("GET","/", middleware.GinLoggerMiddleware())
+	// only for error
 	router.GET("/user/:user_id", users_controller.GetUser)
 	err := router.Run(":3000")
 	if err != nil {
