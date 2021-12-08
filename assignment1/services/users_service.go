@@ -18,7 +18,7 @@ type usersServiceInterface interface {
 func (s *usersService) GetUser(userId int64) (*users.User, error) {
 	result := &users.User{Id: userId}
 	if err := result.Get(); err != nil {
-		return nil, errors.Wrap(err, "users_services:GetUser error")
+		return nil, errors.WithMessage(err, "users_services:GetUser error")
 	}
 	return result, nil
 }

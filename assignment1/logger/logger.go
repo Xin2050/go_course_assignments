@@ -47,6 +47,8 @@ func Error(msg string, err error, tags ...zap.Field) {
 
 func Errors(err error, tags ...zap.Field) {
 	//tags = append(tags, zap.NamedError("error", err))
+	fmt.Println("Print", err)
+
 	log.Error(fmt.Sprintf("original error: %T %v\n", errors.Cause(err), errors.Cause(err)), tags...)
 
 	fmt.Printf("stack trace:%+v\n", err)
