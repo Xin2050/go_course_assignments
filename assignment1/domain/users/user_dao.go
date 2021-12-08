@@ -6,7 +6,7 @@ import (
 )
 
 const (
-	queryGetUser    = "Select id, lastName from users where id=?;"
+	queryGetUser    = "Select id, firstName, lastName from users where id=?;"
 	queryInsertUser = "Insert into users(firstName, lastName, email) values (?,?,?);"
 )
 
