@@ -13,6 +13,14 @@ var (
 
 type usersServiceInterface interface {
 	GetUser(int64) (*users.User, error)
+	CreateUser(users.User) (*users.User, error)
+}
+
+func (s *usersService) CreateUser(user users.User) (*users.User, error) {
+	if err := user.Save(); err != nil {
+		return nil, errors.Wrap(err, "usersService:CreateUser Error")
+	}
+	return &user, nil
 }
 
 func (s *usersService) GetUser(userId int64) (*users.User, error) {

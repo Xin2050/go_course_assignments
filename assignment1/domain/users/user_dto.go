@@ -1,6 +1,8 @@
 package users
 
 type User struct {
-	Id   int64  `json:"id"`
-	Name string `json:"name"`
+	Id        int64  `json:"id"`
+	FirstName string `json:"firstName"`
+	LastName  string `json:"lastName"`
+	Email     string `json:"email" validate:"email"`
 }

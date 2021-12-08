@@ -2,7 +2,7 @@ package mysql_utils
 
 import (
 	"fmt"
-	"github.com/Xin2050/go_course_assignments/s1/utils/errors"
+	rest_errors "github.com/Xin2050/go_course_assignments/s1/utils/errors"
 	"github.com/go-sql-driver/mysql"
 )
 

@@ -3,6 +3,8 @@ package rest_errors
 import (
 	"database/sql"
 	"fmt"
+	"github.com/Xin2050/go_course_assignments/s1/logger"
+	"github.com/go-sql-driver/mysql"
 	"github.com/pkg/errors"
 	"net/http"
 )
@@ -14,12 +16,37 @@ type RestError struct {
 }
 
 func ParseError(err error) *RestError {
+	//write log and print stack trace
+	logger.Errors(err)
+
+	// check sql errors
 	if errors.Is(err, sql.ErrNoRows) {
 		return NotFoundError(fmt.Sprintf("no record found by given condictions"))
 	}
-	//todo unwrap error chain until find mysql error, then user mysql_utils.ParseError to handle mysql error code
-	//todo more different errors handling
+
+	// check original err if a mysql error
+	switch err := errors.Cause(err).(type) {
+	case *mysql.MySQLError:
+		// break down the mysql error code , send to client a user-friendly message
+		return ParseMySQLError(errors.Cause(err))
+	}
+
 	return InternalServerError("Internal Server Error")
+}
+
+func ParseMySQLError(err error) *RestError {
+
+	sqlErr, ok := err.(*mysql.MySQLError)
+	if !ok {
+		return InternalServerError(err.Error())
+	}
+	switch sqlErr.Number {
+	case 1364:
+		return InternalServerError(fmt.Sprintf("mysql Schema error"))
+	case 1062:
+		return BadRequestError(fmt.Sprintf("duplicated key: %s", sqlErr.Message))
+	}
+	return InternalServerError(fmt.Sprintf("error processing request:%s", err))
 }
 
 func BadRequestError(message string) *RestError {

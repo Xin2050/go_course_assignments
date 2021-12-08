@@ -18,6 +18,8 @@ func StartApplication() {
 	router.SetTrustedProxies([]string{"localhost"})
 	// only for error
 	router.GET("/user/:user_id", users_controller.GetUser)
+	router.POST("/user", users_controller.SaveUser)
+
 	err := router.Run(":3000")
 	if err != nil {
 		logger.Error("application was failed to start", err)

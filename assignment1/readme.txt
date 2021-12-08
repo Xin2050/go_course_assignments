@@ -9,11 +9,22 @@ log middleware: middleware/logger_middleware.go
 
 error start with :/domain/users/user_dao.go:23
 
+1.Get User
 request path: http://localhost:3000/user/:user_id
 test sample:
     Correct: http://localhost:3000/user/25  return: code:200
     Failed: http://localhost:3000/user/999  return: code:404
     Failed: http://localhost:3000/user/ab  return: code:400
+2. Create user
+POST http://localhost:3000/user
+test data
+{
+    "FirstName":"Xin",
+    "LastName":"Lee",
+    "email":"te4s3te9@gmail.com"
+}
+when post data twice, you will receive a duplicate error.
+
 
 mysql info
 host: localhost:3306

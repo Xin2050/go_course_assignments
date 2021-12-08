@@ -1,6 +1,7 @@
 package users_controller
 
 import (
+	"github.com/Xin2050/go_course_assignments/s1/domain/users"
 	users_services "github.com/Xin2050/go_course_assignments/s1/services"
 	rest_errors "github.com/Xin2050/go_course_assignments/s1/utils/errors"
 	"github.com/pkg/errors"
@@ -17,6 +18,20 @@ func GetUserId(userIdParam string) (int64, *rest_errors.RestError) {
 		return -1, rest_errors.BadRequestError("user id should be a number")
 	}
 	return userId, nil
+}
+func SaveUser(c *gin.Context) {
+	var user users.User
+	if err := c.ShouldBindJSON(&user); err != nil {
+		c.JSON(http.StatusBadRequest, rest_errors.BadRequestError("invalid input"))
+		return
+	}
+	savedUser, err := users_services.UsersService.CreateUser(user)
+	if err != nil {
+		c.Set("Errors", err)
+		return
+	}
+	c.JSON(http.StatusOK, &savedUser)
+
 }
 func GetUser(c *gin.Context) {
 	userId, userErr := GetUserId(c.Param("user_id"))
