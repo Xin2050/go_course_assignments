@@ -98,6 +98,8 @@ func main() {
 		group.Go(func() error {
 			select {
 			case <-ctx.Done():
+				// use below line will activate exit timeout
+				//time.Sleep(time.Second * 4)
 				server.Stop(ctx)
 				return ctx.Err()
 			}
@@ -112,7 +114,13 @@ func main() {
 		case <-ctx.Done():
 			return ctx.Err()
 		case <-cn:
+			fmt.Println("\n received an exit command, start to try closing....")
 			cancel()
+			//set up a timeout
+			time.AfterFunc(time.Second*3, func() {
+				fmt.Println("Exit process time out. I will force to exit the process")
+				os.Exit(1)
+			})
 		}
 		return nil
 	})
