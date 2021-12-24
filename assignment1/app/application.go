@@ -14,13 +14,17 @@ var (
 func StartApplication() {
 
 	router.Use(middleware.GinLoggerMiddleware())
-	logger.Info("application is trying to run on port 3000.")
+	logger.Info("application is trying to run on port 3030.")
 	router.SetTrustedProxies([]string{"localhost"})
 	// only for error
 	router.GET("/user/:user_id", users_controller.GetUser)
 	router.POST("/user", users_controller.SaveUser)
-
-	err := router.Run(":3000")
+	//server := http.Server{
+	//	Addr:    ":3030",
+	//	Handler: router,
+	//}
+	//err := server.ListenAndServe()
+	err := router.Run(":3030")
 	if err != nil {
 		logger.Error("application was failed to start", err)
 	}
