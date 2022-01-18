@@ -20,7 +20,7 @@ func NewBucket() *Bucket {
 	}
 }
 
-// 记录请求结果
+// Record 记录请求结果
 func (b *Bucket) Record(result bool) {
 	b.Lock()
 	defer b.Unlock()

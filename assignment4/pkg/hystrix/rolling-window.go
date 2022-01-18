@@ -25,7 +25,7 @@ type RollingWindow struct {
 	brokeTimeGap time.Duration
 }
 
-// 新建滑动窗口
+// NewRollingWindow 新建滑动窗口
 func NewRollingWindow(
 	size int,
 	reqThreshold int,
@@ -41,7 +41,7 @@ func NewRollingWindow(
 	}
 }
 
-// 追加一个新桶
+// AppendBucket 追加一个新桶
 func (r *RollingWindow) AppendBucket() {
 	r.Lock()
 	defer r.Unlock()
@@ -51,7 +51,7 @@ func (r *RollingWindow) AppendBucket() {
 	}
 }
 
-// 获取当前队列末端的桶
+// GetBucket 获取当前队列末端的桶
 func (r *RollingWindow) GetBucket() *Bucket {
 	if len(r.buckets) == 0 {
 		r.AppendBucket()
@@ -59,19 +59,19 @@ func (r *RollingWindow) GetBucket() *Bucket {
 	return r.buckets[len(r.buckets)-1]
 }
 
-// 在桶中记录当次结果
+// RecordReqResult 在桶中记录当次结果
 func (r *RollingWindow) RecordReqResult(result bool) {
 	r.GetBucket().Record(result)
 }
 
-// 展示当前滑动窗口的所有桶状态
+// ShowAllBucket 展示当前滑动窗口的所有桶状态
 func (r *RollingWindow) ShowAllBucket() {
 	for _, v := range r.buckets {
 		fmt.Printf("id: [%v] | total: [%d] | failed: [%d]\n", v.Timestamp, v.Total, v.Failed)
 	}
 }
 
-// 启动滑动窗口
+// Launch 启动滑动窗口
 func (r *RollingWindow) Launch() {
 	go func() {
 		for {
@@ -81,7 +81,7 @@ func (r *RollingWindow) Launch() {
 	}()
 }
 
-// 根据当前滑动窗口判断是否需要触发熔断
+// BreakJudgement 根据当前滑动窗口判断是否需要触发熔断
 func (r *RollingWindow) BreakJudgement() bool {
 	r.RLock()
 	defer r.RUnlock()
@@ -97,7 +97,7 @@ func (r *RollingWindow) BreakJudgement() bool {
 	return false
 }
 
-// 监控华东窗口的总失败次数与是否开启熔断
+// Monitor 监控滑动窗口的总失败次数与是否开启熔断
 func (r *RollingWindow) Monitor() {
 	go func() {
 		for {
@@ -119,12 +119,12 @@ func (r *RollingWindow) Monitor() {
 	}()
 }
 
-// 查询是否超过熔断间隔期
+// OverBrokenTimeGap 查询是否超过熔断间隔期
 func (r *RollingWindow) OverBrokenTimeGap() bool {
 	return time.Since(r.lastBreakTime) > r.brokeTimeGap
 }
 
-// 每隔一秒展示当前是否处于熔断状态
+// ShowStatus 每隔一秒展示当前是否处于熔断状态
 func (r *RollingWindow) ShowStatus() {
 	go func() {
 		for {
@@ -134,18 +134,18 @@ func (r *RollingWindow) ShowStatus() {
 	}()
 }
 
-// 获取当前熔断状态
+// Broken 获取当前熔断状态
 func (r *RollingWindow) Broken() bool {
 	return r.broken
 }
 
-// 设置探测器状态
+// SetSeeker 设置探测器状态
 func (r *RollingWindow) SetSeeker(status bool) {
 	r.Lock()
 	defer r.Unlock()
 }
 
-// 获知探测是否被派出
+// Seeker 获知探测是否被派出
 func (r *RollingWindow) Seeker() bool {
 	return r.seeker
 }

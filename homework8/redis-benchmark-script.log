@@ -1,0 +1,15 @@
+redis-benchmark -h 127.0.0.1 -p 6379 -c 50 -n 1000 -t get
+redis-benchmark -h 127.0.0.1 -p 6379 -c 50 -n 1000 -t set
+
+Summary:
+  throughput summary: 9708.74 requests per second
+  latency summary (msec):
+          avg       min       p50       p95       p99       max
+        4.986     1.920     4.695     8.055     8.799    11.183
+
+Summary:
+  throughput summary: 7633.59 requests per second
+  latency summary (msec):
+          avg       min       p50       p95       p99       max
+        6.362     1.456     5.655    12.663    16.527    17.391
+
